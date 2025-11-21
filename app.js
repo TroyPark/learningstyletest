@@ -413,6 +413,12 @@ function showResult() {
     // 문장의 중간 부분에서 자연스럽게 줄바꿈
     let formattedDescription = result.description;
     
+    // "ㅋㅋ" 뒤에서 줄바꿈
+    formattedDescription = formattedDescription.replace(/ㅋㅋ\s+/g, 'ㅋㅋ\n');
+    
+    // 마침표 뒤에서 줄바꿈 (공백이 있을 때)
+    formattedDescription = formattedDescription.replace(/\.\s+/g, '.\n');
+    
     // "근데", "그런데", "하지만" 같은 전환어 앞에서 줄바꿈
     formattedDescription = formattedDescription.replace(/(\.\s+)(근데|그런데|하지만)/g, '.\n$2');
     
@@ -421,6 +427,9 @@ function showResult() {
     
     // 느낌표 뒤에서 줄바꿈 (다음 문장이 있을 때)
     formattedDescription = formattedDescription.replace(/!\s+([가-힣])/g, '!\n$1');
+    
+    // 연속된 줄바꿈 제거
+    formattedDescription = formattedDescription.replace(/\n\n+/g, '\n').trim();
     
     document.getElementById('resultDescription').textContent = formattedDescription;
     
