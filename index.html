@@ -49,7 +49,7 @@
         
         body {
             font-family: 'Noto Sans KR', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #FFF8F0 0%, #FFFBF5 50%, #F5F9FF 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -63,12 +63,12 @@
             top: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            background: linear-gradient(135deg, #2C3E50 0%, #34495E 100%);
             color: white;
             padding: 20px;
             text-align: center;
             z-index: 1000;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
             overflow: hidden;
         }
         
@@ -82,7 +82,7 @@
             background: linear-gradient(
                 90deg,
                 rgba(255, 255, 255, 0) 0%,
-                rgba(255, 255, 255, 0.3) 50%,
+                rgba(255, 255, 255, 0.4) 50%,
                 rgba(255, 255, 255, 0) 100%
             );
             animation: shine 3s ease-in-out infinite;
@@ -127,15 +127,43 @@
             margin-bottom: 5px;
         }
         
+        .banner-text .highlight-text {
+            color: inherit;
+            font-weight: 900;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .banner-text .highlight-text::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #FFD700 0%, #FFA500 100%);
+            border-radius: 2px;
+            opacity: 0.9;
+        }
+        
+        @media (max-width: 768px) {
+            .banner-text .highlight-text::after {
+                bottom: -2px;
+                height: 4px;
+                opacity: 1;
+                background: linear-gradient(90deg, #FFD700 0%, #FFA500 100%);
+            }
+        }
+        
         .banner-text p {
             font-size: 1em;
             opacity: 0.9;
         }
         
         .banner-btn {
-            background: white;
-            color: #1e3a8a;
-            border: none;
+            background: rgba(255,255,255,0.95);
+            color: #2C3E50;
+            border: 2px solid rgba(255,255,255,0.3);
             padding: 12px 30px;
             border-radius: 25px;
             font-weight: 700;
@@ -144,17 +172,19 @@
             font-size: 1em;
             text-decoration: none;
             display: inline-block;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
         
         .banner-btn:hover {
             transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(255,255,255,0.3);
+            box-shadow: 0 5px 20px rgba(255,255,255,0.4);
+            background: #FFF;
         }
         
         .container {
             background: white;
-            border-radius: 30px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            border-radius: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.04);
             max-width: 700px;
             width: 100%;
             padding: 50px;
@@ -169,7 +199,7 @@
             right: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(102,126,234,0.1) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(255,215,0,0.05) 0%, transparent 70%);
             animation: rotate 20s linear infinite;
         }
         
@@ -189,14 +219,20 @@
         
         .start-section h1 {
             font-size: 2.5em;
-            color: #333;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 20px;
             font-weight: 900;
+            letter-spacing: -0.02em;
         }
         
         .start-section .emoji {
-            font-size: 8em;
-            margin: 30px 0;
+            width: 100%;
+            max-width: 160px;
+            margin: 30px auto;
+            display: block;
             animation: bounce 2s ease-in-out infinite;
         }
         
@@ -213,7 +249,7 @@
         }
         
         .start-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%);
             color: white;
             border: none;
             padding: 20px 60px;
@@ -223,12 +259,29 @@
             margin-top: 30px;
             font-weight: 700;
             transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(102,126,234,0.4);
+            box-shadow: 0 8px 25px rgba(255,215,0,0.35);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .start-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .start-btn:hover::before {
+            left: 100%;
         }
         
         .start-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(102,126,234,0.6);
+            box-shadow: 0 12px 35px rgba(255,215,0,0.45);
         }
         
         .quiz-section {
@@ -246,14 +299,15 @@
         
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(90deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%);
             width: 0%;
             transition: width 0.5s ease;
+            border-radius: 10px;
         }
         
         .question-number {
             font-size: 1.1em;
-            color: #764ba2;
+            color: #FF8C00;
             font-weight: 700;
             margin-bottom: 15px;
         }
@@ -273,10 +327,10 @@
         }
         
         .option-btn {
-            background: #f5f5f5;
-            border: 3px solid transparent;
+            background: linear-gradient(135deg, #FFFBF5 0%, #FFFEF8 100%);
+            border: 2px solid rgba(255,215,0,0.2);
             padding: 25px;
-            border-radius: 15px;
+            border-radius: 20px;
             cursor: pointer;
             transition: all 0.3s ease;
             text-align: left;
@@ -286,6 +340,7 @@
             position: relative;
             overflow: hidden;
             -webkit-tap-highlight-color: transparent;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
         
         .option-btn::before {
@@ -295,15 +350,16 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(102,126,234,0.2), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255,215,0,0.15), transparent);
             transition: left 0.5s ease;
         }
         
         @media (hover: hover) {
             .option-btn:hover {
-                border-color: #667eea;
+                border-color: #FFD700;
                 transform: translateX(10px);
-                background: #fff;
+                background: linear-gradient(135deg, #FFF8E1 0%, #FFFEF5 100%);
+                box-shadow: 0 4px 15px rgba(255,215,0,0.2);
             }
             
             .option-btn:hover::before {
@@ -313,7 +369,7 @@
         
         .option-btn:active {
             transform: scale(0.98);
-            background: #e8e8e8;
+            background: linear-gradient(135deg, #FFF4E6 0%, #FFFBF0 100%);
         }
         
         .result-section {
@@ -321,20 +377,26 @@
             text-align: center;
         }
         
-        .result-emoji {
-            font-size: 10em;
-            margin: 20px 0;
+        .result-image {
+            width: 100%;
+            max-width: 400px;
+            margin: 20px auto;
+            display: block;
             animation: pop 0.6s ease-out;
+            border-radius: 30px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.12);
         }
         
         .share-buttons {
             display: flex;
             justify-content: center;
+            gap: 15px;
             margin-top: 20px;
+            flex-wrap: wrap;
         }
         
         .share-btn-main {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%);
             color: white;
             border: none;
             padding: 15px 50px;
@@ -343,32 +405,55 @@
             font-weight: 700;
             transition: all 0.3s ease;
             font-size: 1.2em;
-            box-shadow: 0 10px 30px rgba(102,126,234,0.3);
+            box-shadow: 0 8px 25px rgba(255,215,0,0.35);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .save-image-btn {
+            background: linear-gradient(135deg, #FFA500 0%, #FF8C00 50%, #FF7F00 100%);
+            color: white;
+            border: none;
+            padding: 15px 50px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            font-size: 1.2em;
+            box-shadow: 0 8px 25px rgba(255,165,0,0.35);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .share-btn-main::before, .save-image-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .share-btn-main:hover::before, .save-image-btn:hover::before {
+            left: 100%;
         }
         
         .share-btn-main:hover {
             transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(102,126,234,0.5);
+            box-shadow: 0 12px 35px rgba(255,215,0,0.45);
+        }
+        
+        .save-image-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(255,165,0,0.45);
         }
         
         @keyframes pop {
             0% { transform: scale(0); }
             50% { transform: scale(1.2); }
             100% { transform: scale(1); }
-        }
-        
-        .result-type {
-            font-size: 2.5em;
-            color: #764ba2;
-            font-weight: 900;
-            margin-bottom: 15px;
-        }
-        
-        .result-title {
-            font-size: 2em;
-            color: #333;
-            margin-bottom: 30px;
-            font-weight: 700;
         }
         
         .result-description {
@@ -380,15 +465,20 @@
         }
         
         .result-study-method {
-            background: linear-gradient(135deg, rgba(102,126,234,0.1) 0%, rgba(118,75,162,0.1) 100%);
+            background: linear-gradient(135deg, rgba(255,215,0,0.06) 0%, rgba(255,165,0,0.06) 50%, rgba(255,140,0,0.06) 100%);
             padding: 30px;
-            border-radius: 20px;
+            border-radius: 25px;
             margin: 30px 0;
             text-align: left;
+            border: 2px solid rgba(255,215,0,0.2);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
         
         .result-study-method h3 {
-            color: #764ba2;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             font-size: 1.5em;
             margin-bottom: 20px;
             font-weight: 700;
@@ -414,9 +504,9 @@
         }
         
         .restart-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
+            background: linear-gradient(135deg, #F5F5F5 0%, #E8E8E8 100%);
+            color: #333;
+            border: 2px solid rgba(0,0,0,0.08);
             padding: 15px 50px;
             font-size: 1.2em;
             border-radius: 50px;
@@ -424,11 +514,30 @@
             margin-top: 30px;
             font-weight: 700;
             transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .restart-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .restart-btn:hover::before {
+            left: 100%;
         }
         
         .restart-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(102,126,234,0.4);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+            background: linear-gradient(135deg, #FFF 0%, #F5F5F5 100%);
         }
         
         .disclaimer {
@@ -496,8 +605,8 @@
             }
             
             .start-section .emoji {
-                font-size: 4em;
-                margin: 20px 0;
+                max-width: 120px;
+                margin: 20px auto;
             }
             
             .start-section p {
@@ -535,19 +644,9 @@
                 padding: 18px;
             }
             
-            .result-emoji {
-                font-size: 4em;
-                margin: 10px 0;
-            }
-            
-            .result-type {
-                font-size: 1.8em;
-                margin-bottom: 8px;
-            }
-            
-            .result-title {
-                font-size: 1.3em;
-                margin-bottom: 12px;
+            .result-image {
+                max-width: 320px;
+                margin: 10px auto;
             }
             
             .result-description {
@@ -579,11 +678,16 @@
             
             .share-buttons {
                 margin-top: 15px;
+                flex-direction: column;
+                gap: 10px;
+                align-items: center;
             }
             
-            .share-btn-main {
+            .share-btn-main, .save-image-btn {
                 padding: 12px 35px;
                 font-size: 1em;
+                width: 100%;
+                max-width: 300px;
             }
             
             .restart-btn {
@@ -606,7 +710,7 @@
         <div class="banner-content">
             <img src="bi.png" alt="에이닷 영어학원" class="banner-logo">
             <div class="banner-text">
-                <h2>🎯 1:1 맞춤 영어학원 | 성적이 오르는 에이닷</h2>
+                <h2>🎯 <span class="highlight-text">1:1 맞춤 영어학원</span> | 성적이 오르는 에이닷</h2>
                 <p>우리학교 맞춤! 학생에 맞춤! 최적의 영어 학습법 💡</p>
             </div>
             <a href="https://www.adotenglish.com/" target="_blank" class="banner-btn" onclick="trackHomepageClick()">알아보기</a>
@@ -618,7 +722,7 @@
             <!-- 시작 화면 -->
             <div class="start-section" id="startSection">
                 <h1>🧠 공부 스타일 테스트</h1>
-                <div class="emoji">🤓</div>
+                <img src="main_image.png" alt="공부 스타일 테스트" class="emoji">
                 <p>나는 어떤 공부 스타일일까?</p>
                 <p style="font-size: 1em; color: #999;">12개의 질문으로 알아보는 나의 찐 공부법</p>
                 <button class="start-btn" onclick="startQuiz()">시작하기</button>
@@ -636,9 +740,7 @@
             
             <!-- 결과 화면 -->
             <div class="result-section" id="resultSection">
-                <div class="result-emoji" id="resultEmoji"></div>
-                <div class="result-type" id="resultType"></div>
-                <div class="result-title" id="resultTitle"></div>
+                <img class="result-image" id="resultImage" src="" alt="결과 이미지">
                 <div class="result-description" id="resultDescription"></div>
                 <div class="result-study-method">
                     <h3>💡 너를 위한 공부법</h3>
@@ -651,6 +753,9 @@
                 <div class="share-buttons">
                     <button class="share-btn-main" onclick="shareResult()">
                         📤 공유하기
+                    </button>
+                    <button class="save-image-btn" onclick="saveResultImage()">
+                        💾 이미지 저장
                     </button>
                 </div>
                 
