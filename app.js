@@ -398,16 +398,65 @@ function showResult() {
     currentResultType = styleType;
     currentResultTitle = result.title;
     
+    // 퀴즈 화면 숨기고 로딩 화면 표시
     document.getElementById('quizSection').style.display = 'none';
-    document.getElementById('resultSection').style.display = 'block';
+    document.getElementById('loadingSection').style.display = 'block';
+    document.getElementById('resultSection').style.display = 'none';
     
     // 이미지 경로 설정 (표시용: webp)
     const imagePath = `https://troypark.github.io/learningstyletestsource/animating/${imageMapWebp[styleType]}`;
-    document.getElementById('resultImage').src = imagePath;
-    document.getElementById('resultImage').alt = result.title;
+    const imgElement = document.getElementById('resultImage');
     
-    // 다운로드용 PNG 경로를 data 속성에 저장
-    document.getElementById('resultImage').setAttribute('data-download-path', `https://troypark.github.io/learningstyletestsource/${imageMapPng[styleType]}`);
+    // 로딩 시작 시간 기록
+    const loadingStartTime = Date.now();
+    const minLoadingTime = 2000; // 최소 2초
+    
+    // 이미지 미리 로드
+    const img = new Image();
+    let imageLoaded = false;
+    
+    function showResultPage() {
+        const elapsedTime = Date.now() - loadingStartTime;
+        const remainingTime = Math.max(0, minLoadingTime - elapsedTime);
+        
+        setTimeout(function() {
+            document.getElementById('loadingSection').style.display = 'none';
+            document.getElementById('resultSection').style.display = 'block';
+        }, remainingTime);
+    }
+    
+    img.onload = function() {
+        // 이미지가 로드되면 설정
+        imgElement.src = imagePath;
+        imgElement.alt = result.title;
+        imgElement.setAttribute('data-download-path', `https://troypark.github.io/learningstyletestsource/${imageMapPng[styleType]}`);
+        imageLoaded = true;
+        
+        // 최소 로딩 시간이 지났으면 바로 표시, 아니면 남은 시간만큼 대기
+        showResultPage();
+    };
+    
+    img.onerror = function() {
+        // 이미지 로드 실패 시에도 결과 화면 표시
+        imgElement.src = imagePath;
+        imgElement.alt = result.title;
+        imgElement.setAttribute('data-download-path', `https://troypark.github.io/learningstyletestsource/${imageMapPng[styleType]}`);
+        imageLoaded = true;
+        
+        showResultPage();
+    };
+    
+    img.src = imagePath;
+    
+    // 이미지가 너무 늦게 로드되면 최대 5초 후 강제 표시
+    setTimeout(function() {
+        if (!imageLoaded) {
+            imgElement.src = imagePath;
+            imgElement.alt = result.title;
+            imgElement.setAttribute('data-download-path', `https://troypark.github.io/learningstyletestsource/${imageMapPng[styleType]}`);
+            showResultPage();
+        }
+    }, 5000);
     
     // description에 줄바꿈 추가 (가독성 향상)
     // 문장의 중간 부분에서 자연스럽게 줄바꿈
@@ -431,8 +480,8 @@ function showResult() {
     // 연속된 줄바꿈 제거
     formattedDescription = formattedDescription.replace(/\n\n+/g, '\n').trim();
     
+    // description과 methods는 바로 설정 (이미지 로드와 무관)
     document.getElementById('resultDescription').textContent = formattedDescription;
-    
     const methodsHtml = result.methods.map(method => `<li>${method}</li>`).join('');
     document.getElementById('studyMethods').innerHTML = methodsHtml;
 }
