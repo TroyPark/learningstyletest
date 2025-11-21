@@ -345,6 +345,29 @@ function selectOption(type) {
     }
 }
 
+// MBTI 타입별 이미지 파일명 매핑
+const imageMap = {
+    INTJ: 'INTJ_전략적플래너신.png',
+    INTP: 'INTP_영혼없는천재.png',
+    ENTJ: 'ENTJ_공부마피아보스.png',
+    ENTP: 'ENTP_산만한아이디어뱅크.png',
+    INFJ: 'INFJ_몰입형은둔고수.png',
+    INFP: 'INFP_감성충만공부러.png',
+    ENFJ: 'ENFJ_스터디엄마.png',
+    ENFP: 'ENFP_공부계의자유영혼.png',
+    ISTJ: 'ISTJ_계획실천의신.png',
+    ISFJ: 'ISFJ_꼼꼼정리왕.png',
+    ESTJ: 'ESTJ_타임어택마스터.png',
+    ESFJ: 'ESFJ_함께가치공부러.png',
+    ISTP: 'ISTP_문제풀이장인.png',
+    ISFP: 'ISFP_감각적암기러.png',
+    ESTP: 'ESTP_스피드러너.png',
+    ESFP: 'ESFP_공부도놀이처럼.png'
+};
+
+let currentResultType = '';
+let currentResultTitle = '';
+
 function showResult() {
     const styleType = 
         (scores.E > scores.I ? 'E' : 'I') +
@@ -353,13 +376,17 @@ function showResult() {
         (scores.J > scores.P ? 'J' : 'P');
     
     const result = results[styleType];
+    currentResultType = styleType;
+    currentResultTitle = result.title;
     
     document.getElementById('quizSection').style.display = 'none';
     document.getElementById('resultSection').style.display = 'block';
     
-    document.getElementById('resultEmoji').textContent = result.emoji;
-    document.getElementById('resultType').textContent = styleType;
-    document.getElementById('resultTitle').textContent = result.title;
+    // 이미지 경로 설정
+    const imagePath = `character_card/${imageMap[styleType]}`;
+    document.getElementById('resultImage').src = imagePath;
+    document.getElementById('resultImage').alt = result.title;
+    
     document.getElementById('resultDescription').textContent = result.description;
     
     const methodsHtml = result.methods.map(method => `<li>${method}</li>`).join('');
@@ -368,8 +395,8 @@ function showResult() {
 
 // 공유하기 함수 (Web Share API 사용)
 function shareResult() {
-    const type = document.getElementById('resultType').textContent;
-    const title = document.getElementById('resultTitle').textContent;
+    const type = currentResultType;
+    const title = currentResultTitle;
     const description = document.getElementById('resultDescription').textContent;
     const url = window.location.href.split('?')[0];
     
@@ -418,7 +445,7 @@ function shareResult() {
 
 // Web Share API를 지원하지 않는 경우 텍스트 복사
 function fallbackShare(shareText) {
-    const type = document.getElementById('resultType').textContent;
+    const type = currentResultType;
     
     navigator.clipboard.writeText(shareText).then(() => {
         alert('✅ 결과가 복사되었습니다!\n카카오톡이나 메시지에 붙여넣기해서 친구들에게 공유해보세요 😊');
@@ -462,6 +489,97 @@ function fallbackShare(shareText) {
     });
 }
 
+// 이미지 저장 함수 (모바일: 사진첩, PC: 다운로드)
+function saveResultImage() {
+    const imgElement = document.getElementById('resultImage');
+    const imgSrc = imgElement.src;
+    
+    // 이미지가 로드되지 않았으면 대기
+    if (!imgSrc || imgSrc === window.location.href || imgSrc === '') {
+        alert('이미지를 불러오는 중입니다. 잠시 후 다시 시도해주세요.');
+        return;
+    }
+    
+    // 이미지가 완전히 로드되었는지 확인
+    if (!imgElement.complete || imgElement.naturalHeight === 0) {
+        // 이미지 로드 대기
+        imgElement.onload = function() {
+            proceedWithSave(imgSrc);
+        };
+        imgElement.onerror = function() {
+            alert('이미지를 불러올 수 없습니다. 페이지를 새로고침 후 다시 시도해주세요.');
+        };
+        return;
+    }
+    
+    // 이미지가 이미 로드되어 있으면 바로 저장
+    proceedWithSave(imgSrc);
+}
+
+function proceedWithSave(imgSrc) {
+    // 모바일 감지 (iOS 또는 Android)
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    
+    try {
+        if (isMobile) {
+            // 모바일: 사진첩에 저장
+            saveImageToGallery(imgSrc);
+        } else {
+            // PC: 다운로드
+            downloadImage(imgSrc, `공부스타일_${currentResultType}.png`);
+        }
+        
+        // 애널리틱스 이벤트 전송
+        if (window.wcs && typeof wcs.event === 'function') {
+            wcs.event("(students)이미지저장", "저장횟수");
+        }
+        if (typeof gtag === 'function') {
+            gtag('event', 'image_save', {
+                method: isMobile ? 'gallery' : 'download',
+                content_type: 'test_result',
+                item_id: currentResultType
+            });
+        }
+    } catch (error) {
+        console.error('이미지 저장 실패:', error);
+        alert('이미지 저장에 실패했습니다. 다시 시도해주세요.');
+    }
+}
+
+// 모바일에서 사진첩에 저장
+function saveImageToGallery(imageSrc) {
+    // 모든 모바일에서 직접 링크 사용 (CORS 문제 회피)
+    const link = document.createElement('a');
+    link.href = imageSrc;
+    link.download = `공부스타일_${currentResultType}.png`;
+    link.target = '_blank';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    // 사용자에게 안내
+    setTimeout(() => {
+        if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+            alert('📱 이미지를 길게 눌러 "이미지 저장" 또는 "사진에 저장"을 선택해주세요!');
+        } else {
+            alert('✅ 이미지가 다운로드되었습니다!\n다운로드 폴더나 갤러리에서 확인해보세요 📸');
+        }
+    }, 100);
+}
+
+// PC에서 다운로드
+function downloadImage(imageSrc, filename) {
+    // 직접 링크로 다운로드 (CORS 문제 회피)
+    const link = document.createElement('a');
+    link.href = imageSrc;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    alert('✅ 이미지가 다운로드되었습니다! 💾');
+}
+
 function restartQuiz() {
     currentQuestion = 0;
     scores = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
@@ -476,4 +594,5 @@ function trackHomepageClick() {
         wcs.event("(students)홈페이지유입", "유입횟수");
     }
 }
+
 
