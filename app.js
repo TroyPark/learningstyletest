@@ -409,7 +409,20 @@ function showResult() {
     // 다운로드용 PNG 경로를 data 속성에 저장
     document.getElementById('resultImage').setAttribute('data-download-path', `https://troypark.github.io/learningstyletestsource/${imageMapPng[styleType]}`);
     
-    document.getElementById('resultDescription').textContent = result.description;
+    // description에 줄바꿈 추가 (가독성 향상)
+    // 문장의 중간 부분에서 자연스럽게 줄바꿈
+    let formattedDescription = result.description;
+    
+    // "근데", "그런데", "하지만" 같은 전환어 앞에서 줄바꿈
+    formattedDescription = formattedDescription.replace(/(\.\s+)(근데|그런데|하지만)/g, '.\n$2');
+    
+    // "근데" 앞에서 줄바꿈 (마침표 없이)
+    formattedDescription = formattedDescription.replace(/(\s+)(근데|그런데|하지만)/g, '\n$2');
+    
+    // 느낌표 뒤에서 줄바꿈 (다음 문장이 있을 때)
+    formattedDescription = formattedDescription.replace(/!\s+([가-힣])/g, '!\n$1');
+    
+    document.getElementById('resultDescription').textContent = formattedDescription;
     
     const methodsHtml = result.methods.map(method => `<li>${method}</li>`).join('');
     document.getElementById('studyMethods').innerHTML = methodsHtml;
