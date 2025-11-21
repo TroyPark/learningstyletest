@@ -372,6 +372,37 @@
             background: linear-gradient(135deg, #FFF4E6 0%, #FFFBF0 100%);
         }
         
+        .loading-section {
+            display: none;
+            text-align: center;
+        }
+        
+        .loading-content {
+            padding: 60px 20px;
+        }
+        
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(255,215,0,0.2);
+            border-top-color: #FFD700;
+            border-radius: 50%;
+            margin: 30px auto;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            font-size: 1.5em;
+            color: #333;
+            font-weight: 700;
+            margin-top: 20px;
+        }
+        
         .result-section {
             display: none;
             text-align: center;
@@ -720,6 +751,14 @@
                 <div class="question-number" id="questionNumber"></div>
                 <div class="question" id="question"></div>
                 <div class="options" id="options"></div>
+            </div>
+            
+            <!-- 로딩 화면 -->
+            <div class="loading-section" id="loadingSection">
+                <div class="loading-content">
+                    <div class="loading-spinner"></div>
+                    <div class="loading-text">결과를 도출중입니다...</div>
+                </div>
             </div>
             
             <!-- 결과 화면 -->
