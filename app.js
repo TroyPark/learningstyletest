@@ -105,7 +105,7 @@ const results = {
             "자기만의 체계적인 노트 정리 시스템 만들기",
             "혼자 집중할 수 있는 조용한 공간 확보하기",
             "가끔은 계획에서 벗어나도 괜찮다는 마인드셋 가지기",
-            "<strong>1:1 맞춤 학습</strong>으로 목표 설정 및 전략 코칭 받기"
+            "<strong>1:1 맞춤 학습</strong>으로 맞춤형 목표 설정 및 전략 코칭 받기"
         ]
     },
     INTP: {
@@ -345,8 +345,27 @@ function selectOption(type) {
     }
 }
 
-// MBTI 타입별 이미지 파일명 매핑
-const imageMap = {
+// MBTI 타입별 이미지 파일명 매핑 (표시용: webp, 다운로드용: png)
+const imageMapWebp = {
+    INTJ: 'INTJ_전략적플래너신.webp',
+    INTP: 'INTP_영혼없는천재.webp',
+    ENTJ: 'ENTJ_공부마피아보스.webp',
+    ENTP: 'ENTP_산만한아이디어뱅크.webp',
+    INFJ: 'INFJ_몰입형은둔고수.webp',
+    INFP: 'INFP_감성충만공부러.webp',
+    ENFJ: 'ENFJ_스터디엄마.webp',
+    ENFP: 'ENFP_공부계의자유영혼.webp',
+    ISTJ: 'ISTJ_계획실천의신.webp',
+    ISFJ: 'ISFJ_꼼꼼정리왕.webp',
+    ESTJ: 'ESTJ_타임어택마스터.webp',
+    ESFJ: 'ESFJ_함께가치공부러.webp',
+    ISTP: 'ISTP_문제풀이장인.webp',
+    ISFP: 'ISFP_감각적암기러.webp',
+    ESTP: 'ESTP_스피드러너.webp',
+    ESFP: 'ESFP_공부도놀이처럼.webp'
+};
+
+const imageMapPng = {
     INTJ: 'INTJ_전략적플래너신.png',
     INTP: 'INTP_영혼없는천재.png',
     ENTJ: 'ENTJ_공부마피아보스.png',
@@ -382,10 +401,13 @@ function showResult() {
     document.getElementById('quizSection').style.display = 'none';
     document.getElementById('resultSection').style.display = 'block';
     
-    // 이미지 경로 설정
-    const imagePath = `character_card/${imageMap[styleType]}`;
+    // 이미지 경로 설정 (표시용: webp)
+    const imagePath = `https://troypark.github.io/learningstyletestsource/animating/${imageMapWebp[styleType]}`;
     document.getElementById('resultImage').src = imagePath;
     document.getElementById('resultImage').alt = result.title;
+    
+    // 다운로드용 PNG 경로를 data 속성에 저장
+    document.getElementById('resultImage').setAttribute('data-download-path', `https://troypark.github.io/learningstyletestsource/${imageMapPng[styleType]}`);
     
     document.getElementById('resultDescription').textContent = result.description;
     
@@ -492,41 +514,30 @@ function fallbackShare(shareText) {
 // 이미지 저장 함수 (모바일: 사진첩, PC: 다운로드)
 function saveResultImage() {
     const imgElement = document.getElementById('resultImage');
-    const imgSrc = imgElement.src;
     
-    // 이미지가 로드되지 않았으면 대기
-    if (!imgSrc || imgSrc === window.location.href || imgSrc === '') {
+    // 다운로드용 PNG 경로 가져오기
+    const downloadPath = imgElement.getAttribute('data-download-path');
+    
+    if (!downloadPath) {
         alert('이미지를 불러오는 중입니다. 잠시 후 다시 시도해주세요.');
         return;
     }
     
-    // 이미지가 완전히 로드되었는지 확인
-    if (!imgElement.complete || imgElement.naturalHeight === 0) {
-        // 이미지 로드 대기
-        imgElement.onload = function() {
-            proceedWithSave(imgSrc);
-        };
-        imgElement.onerror = function() {
-            alert('이미지를 불러올 수 없습니다. 페이지를 새로고침 후 다시 시도해주세요.');
-        };
-        return;
-    }
-    
-    // 이미지가 이미 로드되어 있으면 바로 저장
-    proceedWithSave(imgSrc);
+    // PNG 이미지 경로로 다운로드 진행
+    proceedWithSave(downloadPath);
 }
 
-function proceedWithSave(imgSrc) {
+function proceedWithSave(imagePath) {
     // 모바일 감지 (iOS 또는 Android)
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     
     try {
         if (isMobile) {
             // 모바일: 사진첩에 저장
-            saveImageToGallery(imgSrc);
+            saveImageToGallery(imagePath);
         } else {
             // PC: 다운로드
-            downloadImage(imgSrc, `공부스타일_${currentResultType}.png`);
+            downloadImage(imagePath, `공부스타일_${currentResultType}.png`);
         }
         
         // 애널리틱스 이벤트 전송
@@ -594,6 +605,5 @@ function trackHomepageClick() {
         wcs.event("(students)홈페이지유입", "유입횟수");
     }
 }
-
 
 
