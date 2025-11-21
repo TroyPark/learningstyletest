@@ -379,12 +379,14 @@
         
         .result-image {
             width: 100%;
-            max-width: 400px;
+            max-width: 360px;
             margin: 20px auto;
             display: block;
             animation: pop 0.6s ease-out;
             border-radius: 30px;
             box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
         }
         
         .share-buttons {
@@ -441,7 +443,9 @@
             color: #666;
             line-height: 1.8;
             margin-bottom: 20px;
-            text-align: left;
+            text-align: center;
+            white-space: pre-line;
+            word-break: keep-all;
         }
         
         .result-study-method {
@@ -625,7 +629,7 @@
             }
             
             .result-image {
-                max-width: 320px;
+                max-width: 288px;
                 margin: 10px auto;
             }
             
